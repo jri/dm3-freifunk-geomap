@@ -8,11 +8,12 @@ function GeoMapRenderer() {
     // ------------------------------------------------------------------------------------------------------ Public API
 
     this.init = function() {
-        this.adjust_size()
+        $("#canvas-panel").append($("<div>").attr("id", "canvas"))
+        this.resize()
         //
         OpenLayers.ImgPath = "/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/"
         //
-        var map = new OpenLayers.Map("canvas-panel");
+        var map = new OpenLayers.Map("canvas");
         //
         var osm = new OpenLayers.Layer.OSM("OpenSteetMap");
         var gmap = new OpenLayers.Layer.Google("Google Maps");
@@ -42,10 +43,10 @@ function GeoMapRenderer() {
         }
     }
 
-    // ------------------------------------------------------------------------------- Defining TopicmapRenderer Methods
+    // === Overriding TopicmapRenderer Adapter Methods ===
 
-    this.adjust_size = function() {
-        this.calculate_size()
-        $("#canvas-panel").css({width: this.canvas_width, height: this.canvas_height})
+    this.resize = function() {
+        // alert("GeoMapRenderer.resize(): width=" + this.canvas_width + " height=" + this.canvas_height)
+        $("#canvas").width(this.canvas_width).height(this.canvas_height)
     }
 }
