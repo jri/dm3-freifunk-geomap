@@ -2,12 +2,16 @@ function GeoMapRenderer() {
 
     // ------------------------------------------------------------------------------------------------ Constructor Code
 
+    this.superclass = TopicmapRenderer
+    this.superclass()
+
     // ------------------------------------------------------------------------------------------------------ Public API
 
     this.init = function() {
+        this.adjust_size()
+        //
         OpenLayers.ImgPath = "/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/"
         //
-        $("#canvas-panel").css({width: 500, height: 300})
         var map = new OpenLayers.Map("canvas-panel");
         //
         var osm = new OpenLayers.Layer.OSM("OpenSteetMap");
@@ -38,28 +42,10 @@ function GeoMapRenderer() {
         }
     }
 
-    // ------------------------------------------------------------------------------------------------------ Public API
+    // ------------------------------------------------------------------------------- Defining TopicmapRenderer Methods
 
-    // === Implementation of the "Canvas Renderer" interface (actually the public Canvas API) ===
-
-    this.add_topic = function() {
-    }
-
-    this.add_relation = function() {
-    }
-
-    this.set_topic_label = function() {
-    }
-
-    this.scroll_topic_to_center = function() {
-    }
-
-    this.refresh = function() {
-    }
-
-    this.clear = function() {
-    }
-
-    this.resize = function() {
+    this.adjust_size = function() {
+        this.calculate_size()
+        $("#canvas-panel").css({width: this.canvas_width, height: this.canvas_height})
     }
 }
