@@ -1,0 +1,6 @@
+/**
+ * We use no pan panel. So we can move the zoom panel a bit up.
+ */
+.olControlZoomPanel {
+    top: 14px;
+} 
