@@ -5,68 +5,45 @@
         js_renderer_class: "PlainDocument",
         fields: [
             {
-                label: "Benutzername",
-                uri: "net/freifunk/property/username",
-                js_renderer_class: "TitleRenderer",
-                indexing_mode: "KEY"
+                label: "Benutzername",          uri: "net/freifunk/property/username",      indexing_mode: "KEY",
+                js_renderer_class: "TitleRenderer"
             },
             {
-                label: "Vor- und Nachname",
-                uri: "net/freifunk/property/name",
-                indexing_mode: "FULLTEXT"
+                label: "Vor- und Nachname",     uri: "net/freifunk/property/name",          indexing_mode: "FULLTEXT"
             },
             {
-                label: "E-Mail",
-                uri: "net/freifunk/property/email",
-                indexing_mode: "FULLTEXT"
+                label: "E-Mail",                uri: "net/freifunk/property/email",         indexing_mode: "FULLTEXT"
             },
             {
-                label: "Passwort",
-                uri: "net/freifunk/property/password"
+                label: "Passwort",              uri: "net/freifunk/property/password"
             },
             {
-                label: "Passwort bestätigen",
-                uri: "net/freifunk/property/confirm-password"
+                label: "Passwort bestätigen",   uri: "net/freifunk/property/confirm_password"
             },
             {
-                label: "Beschreibung/Interesse/Kommentar",
-                uri: "net/freifunk/property/description",
-                editor: "multi line",
-                lines: 16,
-                indexing_mode: "FULLTEXT"
+                label: "Beschreibung/Interesse/Kommentar", editor: "multi line", lines: 16,
+                                                uri: "net/freifunk/property/description",   indexing_mode: "FULLTEXT"
             },
             {
-                label: "Webseite",
-                uri: "net/freifunk/property/website",
-                indexing_mode: "FULLTEXT"
+                label: "Webseite",              uri: "net/freifunk/property/website",       indexing_mode: "FULLTEXT"
             },
             {
-                label: "Bundesland/Kanton",
-                uri: "net/freifunk/property/area",
-                indexing_mode: "FULLTEXT"
+                label: "Bundesland/Kanton",     uri: "net/freifunk/property/area",          indexing_mode: "FULLTEXT"
             },
             {
-                label: "PLZ",
-                uri: "net/freifunk/property/zipcode",
-                indexing_mode: "KEY"
+                label: "PLZ",                   uri: "net/freifunk/property/postal_code",   indexing_mode: "KEY"
             },
             {
-                label: "Stadt",
-                uri: "net/freifunk/property/city",
-                indexing_mode: "FULLTEXT"
+                label: "Stadt",                 uri: "net/freifunk/property/city",          indexing_mode: "FULLTEXT"
             },
             {
-                label: "Straße",
-                uri: "net/freifunk/property/street",
-                indexing_mode: "FULLTEXT"
+                label: "Straße",                uri: "net/freifunk/property/street",        indexing_mode: "FULLTEXT"
             },
             {
-                label: "Längengrad",
-                uri: "net/freifunk/property/longitude"
+                label: "Längengrad",            uri: "net/freifunk/property/longitude"
             },
             {
-                label: "Breitengrad",
-                uri: "net/freifunk/property/latitude"
+                label: "Breitengrad",           uri: "net/freifunk/property/latitude"
             }
         ]
     }
