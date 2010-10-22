@@ -31,7 +31,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>
-                            de.deepamehta.core.service.Plugin
+                            net.freifunk.dm3plugins.geomap.FreifunkGeomapPlugin
                         </Bundle-Activator>
                     </instructions>
                 </configuration>

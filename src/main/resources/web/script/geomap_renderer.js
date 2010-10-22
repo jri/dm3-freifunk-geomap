@@ -5,6 +5,8 @@ function GeoMapRenderer() {
     this.superclass = TopicmapRenderer
     this.superclass()
 
+    var self = this
+
     // ------------------------------------------------------------------------------------------------------ Public API
 
     this.init = function() {
@@ -18,10 +20,10 @@ function GeoMapRenderer() {
         })
         var markers = new OpenLayers.Layer.Markers("Access Points")
 
-        // Transforms long/lat coordinates according to this map's projection.
+        // Transforms lon/lat coordinates according to this map's projection.
         var transform = function() {
             // Note: this way the projection object is created only once and is not visible outside.
-            var projection = new OpenLayers.Projection("EPSG:4326")     // EPSG:4326 is *long/lat* projection
+            var projection = new OpenLayers.Projection("EPSG:4326")     // EPSG:4326 is *lon/lat* projection
             return function(lon, lat) {
                 return new OpenLayers.LonLat(lon, lat).transform(
                     projection, map.getProjectionObject()
@@ -40,6 +42,8 @@ function GeoMapRenderer() {
         //
         map.setCenter(transform(11, 51), 6)
 
+        // === Methods ===
+
         this.geocode = function() {
             var geocoder = new google.maps.Geocoder()
             return function(address, callback) {
@@ -53,13 +57,28 @@ function GeoMapRenderer() {
             var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
             return function(pos) {
                 // Note: you should not share icons between markers. Clone them instead.
-                markers.addMarker(new OpenLayers.Marker(transform(pos.long, pos.lat), icon.clone()));
+                markers.addMarker(new OpenLayers.Marker(transform(pos.lon, pos.lat), icon.clone()));
             }
         }()
         
         this.set_center = function(pos) {
-            map.setCenter(transform(pos.long, pos.lat))
+            map.setCenter(transform(pos.lon, pos.lat))
         }
+
+        // === Private Functions ===
+
+        function show_access_points() {
+            var access_points = dm3c.restc.get_topics("net/freifunk/topictype/freikarte")
+            for (var i = 0, ap; ap = access_points[i]; i++) {
+                var lon = ap.properties["de/deepamehta/core/property/longitude"]
+                var lat = ap.properties["de/deepamehta/core/property/latitude"]
+                self.add_access_point({lon: lon, lat: lat})
+            }
+        }
+
+        // ===
+
+        show_access_points()
     }
 
 

@@ -52,9 +52,9 @@ function dm3_freifunk_geomap() {
         function update_marker(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var location = results[0].geometry.location
-                var pos = {long: location.c, lat: location.b}
+                var pos = {lon: location.c, lat: location.b}
                 if (LOG) dm3c.log("Geocoder was successful!\n..... " + results[0].formatted_address +
-                    "\n..... long=" + location.c + "\n..... lat=" + location.b)
+                    "\n..... lon=" + location.c + "\n..... lat=" + location.b)
                 // 1) update DB and memory
                 dm3c.update_topic(topic, {
                     "de/deepamehta/core/property/longitude": location.c,
