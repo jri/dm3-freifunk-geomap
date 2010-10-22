@@ -7,8 +7,10 @@ function dm3_freifunk_geomap() {
     dm3c.javascript_source("/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/OpenLayers.js")
     dm3c.javascript_source("http://maps.google.com/maps/api/js?sensor=false&callback=dm3_freifunk_geomap.init_renderer")
 
-    this.geomap = new GeoMapRenderer()
+    var LOG = false
+    if (LOG) dm3c.log("DM3 Freifunk Geomap: instantiating canvas renderer")
     var self = this
+    self.geomap = new GeoMapRenderer()
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
@@ -21,6 +23,7 @@ function dm3_freifunk_geomap() {
 
 
     this.get_canvas_renderer = function() {
+        if (LOG) dm3c.log("DM3 Freifunk Geomap: canvas renderer=" + this.geomap)
         return this.geomap
     }
 
@@ -32,32 +35,42 @@ function dm3_freifunk_geomap() {
             var old_street      = old_properties["net/freifunk/property/street"]
             var old_city        = old_properties["net/freifunk/property/city"]
             var old_postal_code = old_properties["net/freifunk/property/postal_code"]
-            var street_changed = old_street != street
-            var city_changed = old_city != city
+            var street_changed      = old_street != street
+            var city_changed        = old_city != city
             var postal_code_changed = old_postal_code != postal_code
-            /* alert("street: \"" + old_street + "\" => \"" + street + "\" (" + street_changed + ")\n" +
-            "city: \"" + old_city + "\" => \"" + city + "\" (" + city_changed + ")\n" +
-            "postal_code: \"" + old_postal_code + "\" => \"" + postal_code + "\" (" + postal_code_changed + ")") */
+            if (LOG) dm3c.log("Freikarte updated\n..... " +
+                "street: \"" + old_street + "\" => \"" + street + "\" (" + street_changed + ")\n..... " +
+                "city: \"" + old_city + "\" => \"" + city + "\" (" + city_changed + ")\n..... " +
+                "postal_code: \"" + old_postal_code + "\" => \"" + postal_code + "\" (" + postal_code_changed + ")")
             //
             if (street_changed || city_changed || postal_code_changed) {
                 var address = street + ", " + postal_code + " " + city
                 this.geomap.geocode(address, update_marker)
             }
         }
+
+        function update_marker(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location
+                var pos = {long: location.c, lat: location.b}
+                if (LOG) dm3c.log("Geocoder was successful!\n..... " + results[0].formatted_address +
+                    "\n..... long=" + location.c + "\n..... lat=" + location.b)
+                // 1) update DB and memory
+                dm3c.update_topic(topic, {
+                    "de/deepamehta/core/property/longitude": location.c,
+                    "de/deepamehta/core/property/latitude":  location.b
+                })
+                // 2) update GUI
+                dm3c.render_topic()
+                self.geomap.set_center(pos)
+                self.geomap.add_access_point(pos)
+            } else {
+                if (LOG) dm3c.log("ERROR while geocoding: " + status)
+            }
+        }
     }
 
     // ----------------------------------------------------------------------------------------------- Private Functions
-
-    function update_marker(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            var location = results[0].geometry.location
-            alert("Geocoder was successful!\n\n" + results[0].formatted_address +
-                "\nlong=" + location.c + "\nlat=" + location.b)
-            self.geomap.add_access_point({long: location.c, lat: location.b})
-        } else {
-            alert("Geocoder was not successful: " + status)
-        }
-    }
 }
 
 dm3_freifunk_geomap.init_renderer = function() {

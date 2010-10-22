@@ -5,11 +5,6 @@ function GeoMapRenderer() {
     this.superclass = TopicmapRenderer
     this.superclass()
 
-    var transform
-    var markers
-    var geocoder
-    var icon
-
     // ------------------------------------------------------------------------------------------------------ Public API
 
     this.init = function() {
@@ -21,49 +16,50 @@ function GeoMapRenderer() {
         var map = new OpenLayers.Map("canvas", {
             controls: []
         })
-        //
-        transform = get_transformer(new OpenLayers.Projection("EPSG:4326"))     // EPSG:4326 is *long/lat* projection
-        //
-        var gmap = new OpenLayers.Layer.Google("Google Maps")
-        var osm = new OpenLayers.Layer.OSM("OpenSteetMap")
-        markers = new OpenLayers.Layer.Markers("Access Points")
-        // Note: the marker layer must be added to the map *before* markers are added to it.
-        // Otherwise the maps projection isn't propagated and all markers appear at 0/0.
-        map.addLayers([gmap, osm, markers]);
-        map.addControl(new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}))
-        map.addControl(new OpenLayers.Control.ZoomPanel())
-        map.addControl(new OpenLayers.Control.LayerSwitcher())
-        map.setCenter(transform(10, 51), 6)
-        //
-        // --- add markers ---
-        var size = new OpenLayers.Size(21, 25)
-        var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
-        icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
-        //
-        markers.addMarker(new OpenLayers.Marker(transform(13, 52), icon))
-        // add 2nd marker
-        // Note: you should not share icons between markers. Clone them instead.
-        markers.addMarker(new OpenLayers.Marker(transform(10, 51), icon.clone()))
-        //
-        geocoder = new google.maps.Geocoder()
+        var markers = new OpenLayers.Layer.Markers("Access Points")
 
-        // Returns a function that transforms coordinates of the given projection into projection of this map.
-        // (This way the projection object is created only once and is not visible outside.)
-        function get_transformer(projection) {
+        // Transforms long/lat coordinates according to this map's projection.
+        var transform = function() {
+            // Note: this way the projection object is created only once and is not visible outside.
+            var projection = new OpenLayers.Projection("EPSG:4326")     // EPSG:4326 is *long/lat* projection
             return function(lon, lat) {
                 return new OpenLayers.LonLat(lon, lat).transform(
                     projection, map.getProjectionObject()
                 )
             }
+        }()
+        
+        map.addLayers([
+            new OpenLayers.Layer.Google("Google Maps"),
+            new OpenLayers.Layer.OSM("OpenSteetMap"),
+            markers
+        ])
+        map.addControl(new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}))
+        map.addControl(new OpenLayers.Control.ZoomPanel())
+        map.addControl(new OpenLayers.Control.LayerSwitcher())
+        //
+        map.setCenter(transform(11, 51), 6)
+
+        this.geocode = function() {
+            var geocoder = new google.maps.Geocoder()
+            return function(address, callback) {
+                geocoder.geocode({address: address}, callback)
+            }
+        }()
+
+        this.add_access_point = function() {
+            var size = new OpenLayers.Size(21, 25)
+            var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
+            var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
+            return function(pos) {
+                // Note: you should not share icons between markers. Clone them instead.
+                markers.addMarker(new OpenLayers.Marker(transform(pos.long, pos.lat), icon.clone()));
+            }
+        }()
+        
+        this.set_center = function(pos) {
+            map.setCenter(transform(pos.long, pos.lat))
         }
-    }
-
-    this.geocode = function(address, callback) {
-        geocoder.geocode({address: address}, callback)
-    }
-
-    this.add_access_point = function(pos) {
-        markers.addMarker(new OpenLayers.Marker(transform(pos.long, pos.lat), icon.clone()));
     }
 
 
