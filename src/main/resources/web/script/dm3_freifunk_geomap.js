@@ -63,7 +63,7 @@ function dm3_freifunk_geomap() {
                 // 2) update GUI
                 dm3c.render_topic()
                 self.geomap.set_center(pos)
-                self.geomap.add_access_point(pos)
+                self.geomap.add_marker(pos, topic)
             } else {
                 if (LOG) dm3c.log("ERROR while geocoding: " + status)
             }

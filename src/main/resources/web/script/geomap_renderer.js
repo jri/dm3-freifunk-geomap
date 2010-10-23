@@ -51,13 +51,15 @@ function GeoMapRenderer() {
             }
         }()
 
-        this.add_access_point = function() {
+        this.add_marker = function() {
             var size = new OpenLayers.Size(21, 25)
             var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
             var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
-            return function(pos) {
+            return function(pos, topic) {
                 // Note: you should not share icons between markers. Clone them instead.
-                markers.addMarker(new OpenLayers.Marker(transform(pos.lon, pos.lat), icon.clone()));
+                var marker = new OpenLayers.Marker(transform(pos.lon, pos.lat), icon.clone())
+                marker.events.register("click", topic, marker_clicked)
+                markers.addMarker(marker)
             }
         }()
         
@@ -72,8 +74,12 @@ function GeoMapRenderer() {
             for (var i = 0, ap; ap = access_points[i]; i++) {
                 var lon = ap.properties["de/deepamehta/core/property/longitude"]
                 var lat = ap.properties["de/deepamehta/core/property/latitude"]
-                self.add_access_point({lon: lon, lat: lat})
+                self.add_marker({lon: lon, lat: lat}, ap)
             }
+        }
+
+        function marker_clicked() {
+            dm3c.render_topic(this.id)
         }
 
         // ===
