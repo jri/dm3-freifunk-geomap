@@ -8,9 +8,10 @@ function dm3_freifunk_geomap() {
     dm3c.javascript_source("http://maps.google.com/maps/api/js?sensor=false&callback=dm3_freifunk_geomap.init_renderer")
 
     var LOG = false
-    if (LOG) dm3c.log("DM3 Freifunk Geomap: instantiating canvas renderer")
     var self = this
-    self.geomap = new GeoMapRenderer()
+
+    if (LOG) dm3c.log("DM3 Freifunk Geomap: instantiating topicmap renderer")
+    this.geomap = new GeoMapRenderer()
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
@@ -23,10 +24,14 @@ function dm3_freifunk_geomap() {
 
 
     this.get_canvas_renderer = function() {
-        if (LOG) dm3c.log("DM3 Freifunk Geomap: canvas renderer=" + this.geomap)
+        if (LOG) dm3c.log("DM3 Freifunk Geomap: topicmap renderer=" + this.geomap)
         return this.geomap
     }
 
+    /**
+     * Once an access point's geo-relevant properties ("street", "city", "postal code") are changed
+     * we invoke the geocoder and (re)position the access point's marker.
+     */
     this.post_update_topic = function(topic, old_properties) {
         if (topic.type_uri == "net/freifunk/topictype/freikarte") {
             var street      = topic.properties["net/freifunk/property/street"]
@@ -45,11 +50,11 @@ function dm3_freifunk_geomap() {
             //
             if (street_changed || city_changed || postal_code_changed) {
                 var address = street + ", " + postal_code + " " + city
-                this.geomap.geocode(address, update_marker)
+                this.geomap.geocode(address, position_marker)
             }
         }
 
-        function update_marker(results, status) {
+        function position_marker(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var location = results[0].geometry.location
                 var pos = {lon: location.c, lat: location.b}
@@ -61,12 +66,21 @@ function dm3_freifunk_geomap() {
                     "de/deepamehta/core/property/latitude":  location.b
                 })
                 // 2) update GUI
-                dm3c.render_topic()
-                self.geomap.set_center(pos)
                 self.geomap.add_marker(pos, topic)
+                self.geomap.set_center(pos)
+                dm3c.render_topic()
             } else {
                 if (LOG) dm3c.log("ERROR while geocoding: " + status)
             }
+        }
+    }
+
+    /**
+     * Once an access point is deleted we remove its marker.
+     */
+    this.post_delete_topic = function(topic) {
+        if (topic.type_uri == "net/freifunk/topictype/freikarte") {
+            self.geomap.remove_marker(topic.id)
         }
     }
 

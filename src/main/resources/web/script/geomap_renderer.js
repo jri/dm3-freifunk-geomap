@@ -1,3 +1,8 @@
+/**
+ * A topicmap renderer that displays a geo map in the background. The rendering is based on OpenLayers library.
+ *
+ * OpenLayers specifics are encapsulated. The caller must not know about OpenLayers API usage.
+ */
 function GeoMapRenderer() {
 
     // ------------------------------------------------------------------------------------------------ Constructor Code
@@ -6,6 +11,7 @@ function GeoMapRenderer() {
     this.superclass()
 
     var self = this
+    var markers = {}    // holds the OpenLayers.Marker objects, keyed by topic ID
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
@@ -18,7 +24,7 @@ function GeoMapRenderer() {
         var map = new OpenLayers.Map("canvas", {
             controls: []
         })
-        var markers = new OpenLayers.Layer.Markers("Access Points")
+        var markers_layer = new OpenLayers.Layer.Markers("Access Points")
 
         // Transforms lon/lat coordinates according to this map's projection.
         var transform = function() {
@@ -34,7 +40,7 @@ function GeoMapRenderer() {
         map.addLayers([
             new OpenLayers.Layer.Google("Google Maps"),
             new OpenLayers.Layer.OSM("OpenSteetMap"),
-            markers
+            markers_layer
         ])
         map.addControl(new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}))
         map.addControl(new OpenLayers.Control.ZoomPanel())
@@ -42,7 +48,7 @@ function GeoMapRenderer() {
         //
         map.setCenter(transform(11, 51), 6)
 
-        // === Methods ===
+        // === Public API ===
 
         this.geocode = function() {
             var geocoder = new google.maps.Geocoder()
@@ -59,10 +65,15 @@ function GeoMapRenderer() {
                 // Note: you should not share icons between markers. Clone them instead.
                 var marker = new OpenLayers.Marker(transform(pos.lon, pos.lat), icon.clone())
                 marker.events.register("click", topic, marker_clicked)
-                markers.addMarker(marker)
+                markers[topic.id] = marker
+                markers_layer.addMarker(marker)
             }
         }()
-        
+
+        this.remove_marker = function(topic_id) {
+            markers_layer.removeMarker(markers[topic_id])
+        }
+
         this.set_center = function(pos) {
             map.setCenter(transform(pos.lon, pos.lat))
         }
