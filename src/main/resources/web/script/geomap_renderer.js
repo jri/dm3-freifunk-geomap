@@ -15,10 +15,21 @@ function GeoMapRenderer() {
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
+    // === Overriding TopicmapRenderer Adapter Methods ===
+
+    this.resize = function() {
+        if (dm3c.LOG_GUI) dm3c.log("Resizing geomap canvas to " + this.canvas_width + "x" + this.canvas_height)
+        $("#canvas").width(this.canvas_width).height(this.canvas_height)
+    }
+
+    // ------------------------------------------------------------------------------------------------ Constructor Code
+
+    $("#canvas-panel").append($("<div>").attr("id", "canvas"))
+    this.resize()
+
+    // ------------------------------------------------------------------------------------------------------ Public API
+
     this.init = function() {
-        $("#canvas-panel").append($("<div>").attr("id", "canvas"))
-        this.resize()
-        //
         OpenLayers.ImgPath = "/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/"
         //
         var map = new OpenLayers.Map("canvas", {
@@ -97,19 +108,4 @@ function GeoMapRenderer() {
 
         show_access_points()
     }
-
-
-
-    // ***************************************************
-    // *** Overriding TopicmapRenderer Adapter Methods ***
-    // ***************************************************
-
-
-
-    this.resize = function() {
-        // alert("GeoMapRenderer.resize(): width=" + this.canvas_width + " height=" + this.canvas_height)
-        $("#canvas").width(this.canvas_width).height(this.canvas_height)
-    }
-
-    // ----------------------------------------------------------------------------------------------- Private Functions
 }
