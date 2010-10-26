@@ -73,6 +73,10 @@ function GeoMapRenderer() {
             var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
             var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
             return function(pos, topic) {
+                // if the marker is already on the map, remove it
+                if (markers[topic.id]) {
+                    markers_layer.removeMarker(markers[topic.id])
+                }
                 // Note: you should not share icons between markers. Clone them instead.
                 var marker = new OpenLayers.Marker(transform(pos.lon, pos.lat), icon.clone())
                 marker.events.register("click", topic, marker_clicked)
