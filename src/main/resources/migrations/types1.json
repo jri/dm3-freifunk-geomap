@@ -21,8 +21,9 @@
                 label: "Passwort bestätigen",   uri: "net/freifunk/property/confirm_password"
             },
             {
-                label: "Beschreibung/Interesse/Kommentar", editor: "multi line", lines: 16,
-                                                uri: "net/freifunk/property/description",   indexing_mode: "FULLTEXT"
+                label: "Beschreibung/Interesse/Kommentar",
+                                                uri: "net/freifunk/property/description",   indexing_mode: "FULLTEXT",
+                editor: "multi line", lines: 16
             },
             {
                 label: "Webseite",              uri: "net/freifunk/property/website",       indexing_mode: "FULLTEXT"

@@ -56,14 +56,15 @@ function dm3_freifunk_geomap() {
 
         function position_marker(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                var location = results[0].geometry.location
-                var pos = {lon: location.c, lat: location.b}
+                var location = results[0].geometry.location     // location is a Google Maps LatLng object
+                var pos = {lon: location.lng(), lat: location.lat()}
+                if (LOG) dm3c.log(JSON.stringify(results))
                 if (LOG) dm3c.log("Geocoder was successful!\n..... " + results[0].formatted_address +
-                    "\n..... lon=" + location.c + "\n..... lat=" + location.b)
+                    "\n..... lon=" + location.lng() + "\n..... lat=" + location.lat())
                 // 1) update DB and memory
                 dm3c.update_topic(topic, {
-                    "de/deepamehta/core/property/longitude": location.c,
-                    "de/deepamehta/core/property/latitude":  location.b
+                    "de/deepamehta/core/property/longitude": location.lng(),
+                    "de/deepamehta/core/property/latitude":  location.lat()
                 })
                 // 2) update GUI
                 self.geomap.add_marker(pos, topic)
