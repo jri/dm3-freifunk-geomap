@@ -1,0 +1,55 @@
+{
+    topic_types: [
+        {
+            label: "Freikarte",
+            uri: "net/freifunk/topictype/freikarte",
+            js_renderer_class: "PlainDocument",
+            fields: [
+                {
+                    label: "Benutzername",        uri: "net/freifunk/property/username",      indexing_mode: "KEY",
+                    js_renderer_class: "TitleRenderer"
+                },
+                {
+                    label: "Vor- und Nachname",   uri: "net/freifunk/property/name",          indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "E-Mail",              uri: "net/freifunk/property/email",         indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "Passwort",            uri: "net/freifunk/property/password",
+                    viewable: false
+                },
+                {
+                    label: "Passwort bestätigen", uri: "net/freifunk/property/confirm_password",
+                    viewable: false
+                },
+                {
+                    label: "Beschreibung/Interesse/Kommentar",
+                                                  uri: "net/freifunk/property/description",   indexing_mode: "FULLTEXT",
+                    editor: "multi line", lines: 16
+                },
+                {
+                    label: "Webseite",            uri: "net/freifunk/property/website",       indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "Bundesland/Kanton",   uri: "net/freifunk/property/area",          indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "PLZ",                 uri: "net/freifunk/property/postal_code",   indexing_mode: "KEY"
+                },
+                {
+                    label: "Stadt",               uri: "net/freifunk/property/city",          indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "Straße",              uri: "net/freifunk/property/street",        indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "Längengrad",          uri: "de/deepamehta/core/property/longitude"
+                },
+                {
+                    label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude"
+                }
+            ]
+        }
+    ]
+}
