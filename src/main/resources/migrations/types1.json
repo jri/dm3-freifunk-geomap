@@ -15,10 +15,12 @@
                 label: "E-Mail",                uri: "net/freifunk/property/email",         indexing_mode: "FULLTEXT"
             },
             {
-                label: "Passwort",              uri: "net/freifunk/property/password"
+                label: "Passwort",              uri: "net/freifunk/property/password",
+                viewable: false
             },
             {
-                label: "Passwort bestätigen",   uri: "net/freifunk/property/confirm_password"
+                label: "Passwort bestätigen",   uri: "net/freifunk/property/confirm_password",
+                viewable: false
             },
             {
                 label: "Beschreibung/Interesse/Kommentar",
