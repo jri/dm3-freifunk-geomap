@@ -20,6 +20,11 @@
             <artifactId>deepamehta3-core</artifactId>
             <version>${core-version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.deepamehta</groupId>
+            <artifactId>deepamehta3-accesscontrol</artifactId>
+            <version>${accesscontrol-version}</version>
+        </dependency>
     </dependencies>
 
     <build>

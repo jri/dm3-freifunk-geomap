@@ -1,5 +1,8 @@
 package net.freifunk.dm3plugins.geomap;
 
+import de.deepamehta.plugins.accesscontrol.AccessControlPlugin;
+import de.deepamehta.plugins.accesscontrol.AccessControlPlugin.Role;
+
 import de.deepamehta.core.model.DataField;
 import de.deepamehta.core.model.Topic;
 import de.deepamehta.core.model.TopicType;
@@ -16,6 +19,8 @@ public class FreifunkGeomapPlugin extends Plugin {
 
     // ---------------------------------------------------------------------------------------------- Instance Variables
 
+    private AccessControlPlugin accessControl = (AccessControlPlugin) dms.getPlugin("de.deepamehta.3-accesscontrol");
+
     private Logger logger = Logger.getLogger(getClass().getName());
 
     // -------------------------------------------------------------------------------------------------- Public Methods
@@ -27,6 +32,12 @@ public class FreifunkGeomapPlugin extends Plugin {
     // ************************
 
 
+
+    @Override
+    public void postInstallPluginHook() {
+        TopicType freikarteType = dms.getTopicType("net/freifunk/topictype/freikarte", null);
+        accessControl.createACLEntry(freikarteType.id, Role.EVERYONE);
+    }
 
     @Override
     public void providePropertiesHook(Topic topic) {
