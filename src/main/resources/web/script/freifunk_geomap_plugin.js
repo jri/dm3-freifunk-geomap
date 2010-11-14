@@ -1,14 +1,16 @@
-function dm3_freifunk_geomap() {
+function freifunk_geomap_plugin() {
 
     dm3c.css_stylesheet("/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/theme/default/style.css")
     dm3c.css_stylesheet("/net.freifunk.dm3-freifunk-geomap/style/openlayers-overrides.css")
 
     dm3c.javascript_source("/net.freifunk.dm3-freifunk-geomap/script/geomap_renderer.js")
     dm3c.javascript_source("/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/OpenLayers.js")
-    dm3c.javascript_source("http://maps.google.com/maps/api/js?sensor=false&callback=dm3_freifunk_geomap.init_renderer")
+    dm3c.javascript_source(
+        "http://maps.google.com/maps/api/js?sensor=false&callback=freifunk_geomap_plugin.init_renderer")
 
     var LOG = false
     var self = this
+    var access_control
 
     if (LOG) dm3c.log("DM3 Freifunk Geomap: instantiating topicmap renderer")
     this.geomap = new GeoMapRenderer()
@@ -23,6 +25,10 @@ function dm3_freifunk_geomap() {
 
 
 
+    this.init = function() {
+        access_control = dm3c.get_plugin("accesscontrol_plugin")
+    }
+
     this.get_canvas_renderer = function() {
         if (LOG) dm3c.log("DM3 Freifunk Geomap: topicmap renderer=" + this.geomap)
         return this.geomap
@@ -33,7 +39,25 @@ function dm3_freifunk_geomap() {
      * we invoke the geocoder and (re)position the access point's marker.
      */
     this.post_update_topic = function(topic, old_properties) {
+
         if (topic.type_uri == "net/freifunk/topictype/freikarte") {
+            create_user()
+            adjust_marker()
+        }
+
+        function create_user() {
+            var username = topic.properties["net/freifunk/property/username"]
+            var old_username = old_properties["net/freifunk/property/username"]
+            if (username != old_username) {
+                var password = topic.properties["net/freifunk/property/password"]
+                var user = access_control.create_user(username, password)
+                access_control.set_owner(topic.id, user.id)
+                access_control.create_acl_entry(topic.id, "owner", {"write": true})
+                access_control.login(username)
+            }
+        }
+
+        function adjust_marker() {
             var street      = topic.properties["net/freifunk/property/street"]
             var city        = topic.properties["net/freifunk/property/city"]
             var postal_code = topic.properties["net/freifunk/property/postal_code"]
@@ -50,28 +74,28 @@ function dm3_freifunk_geomap() {
             //
             if (street_changed || city_changed || postal_code_changed) {
                 var address = street + ", " + postal_code + " " + city
-                this.geomap.geocode(address, position_marker)
+                self.geomap.geocode(address, position_marker)
             }
-        }
 
-        function position_marker(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                var location = results[0].geometry.location     // location is a Google Maps LatLng object
-                var pos = {lon: location.lng(), lat: location.lat()}
-                if (LOG) dm3c.log(JSON.stringify(results))
-                if (LOG) dm3c.log("Geocoder was successful!\n..... " + results[0].formatted_address +
-                    "\n..... lon=" + location.lng() + "\n..... lat=" + location.lat())
-                // 1) update DB and memory
-                dm3c.update_topic(topic, {
-                    "de/deepamehta/core/property/longitude": location.lng(),
-                    "de/deepamehta/core/property/latitude":  location.lat()
-                })
-                // 2) update GUI
-                self.geomap.add_marker(pos, topic)
-                self.geomap.set_center(pos)
-                dm3c.render_topic()
-            } else {
-                if (LOG) dm3c.log("ERROR while geocoding: " + status)
+            function position_marker(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var location = results[0].geometry.location     // location is a Google Maps LatLng object
+                    var pos = {lon: location.lng(), lat: location.lat()}
+                    if (LOG) dm3c.log(JSON.stringify(results))
+                    if (LOG) dm3c.log("Geocoder was successful!\n..... " + results[0].formatted_address +
+                        "\n..... lon=" + location.lng() + "\n..... lat=" + location.lat())
+                    // 1) update DB and memory
+                    dm3c.update_topic(topic, {
+                        "de/deepamehta/core/property/longitude": location.lng(),
+                        "de/deepamehta/core/property/latitude":  location.lat()
+                    })
+                    // 2) update GUI
+                    self.geomap.add_marker(pos, topic)
+                    self.geomap.set_center(pos)
+                    dm3c.render_topic()
+                } else {
+                    if (LOG) dm3c.log("ERROR while geocoding: " + status)
+                }
             }
         }
     }
@@ -88,6 +112,6 @@ function dm3_freifunk_geomap() {
     // ----------------------------------------------------------------------------------------------- Private Functions
 }
 
-dm3_freifunk_geomap.init_renderer = function() {
-    dm3c.get_plugin("dm3_freifunk_geomap").geomap.init()
+freifunk_geomap_plugin.init_renderer = function() {
+    dm3c.get_plugin("freifunk_geomap_plugin").geomap.init()
 }
