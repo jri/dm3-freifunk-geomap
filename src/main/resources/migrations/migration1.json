@@ -44,10 +44,12 @@
                     label: "Straße",              uri: "net/freifunk/property/street",        indexing_mode: "FULLTEXT"
                 },
                 {
-                    label: "Längengrad",          uri: "de/deepamehta/core/property/longitude"
+                    label: "Längengrad",          uri: "de/deepamehta/core/property/longitude",
+                    editable: false
                 },
                 {
-                    label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude"
+                    label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude",
+                    editable: false
                 }
             ]
         }
