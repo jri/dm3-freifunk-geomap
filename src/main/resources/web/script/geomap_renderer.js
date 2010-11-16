@@ -71,7 +71,12 @@ function GeoMapRenderer() {
         this.add_marker = function() {
             var size = new OpenLayers.Size(21, 25)
             var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
-            var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset)
+            var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/marker.png',
+                size, offset)
+            // - alternate marker -
+            // var size = new OpenLayers.Size(28, 28)
+            // var offset = new OpenLayers.Pixel(-13, -13)
+            // var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/images/wlan-small.png', size, offset)
             return function(pos, topic) {
                 // if the marker is already on the map, remove it
                 if (markers[topic.id]) {
