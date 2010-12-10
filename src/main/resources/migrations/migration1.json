@@ -3,7 +3,6 @@
         {
             label: "Freikarte",
             uri: "net/freifunk/topictype/freikarte",
-            icon_src: "/net.freifunk.dm3-freifunk-geomap/images/wlan.png",
             js_renderer_class: "PlainDocument",
             fields: [
                 {
@@ -36,13 +35,13 @@
                     label: "Bundesland/Kanton",   uri: "net/freifunk/property/area",          indexing_mode: "FULLTEXT"
                 },
                 {
-                    label: "PLZ",                 uri: "net/freifunk/property/postal_code",   indexing_mode: "KEY"
+                    label: "PLZ",                 uri: "de/deepamehta/core/property/postal_code", indexing_mode: "KEY"
                 },
                 {
-                    label: "Stadt",               uri: "net/freifunk/property/city",          indexing_mode: "FULLTEXT"
+                    label: "Stadt",               uri: "de/deepamehta/core/property/city",    indexing_mode: "FULLTEXT"
                 },
                 {
-                    label: "Straße",              uri: "net/freifunk/property/street",        indexing_mode: "FULLTEXT"
+                    label: "Straße",              uri: "de/deepamehta/core/property/street",  indexing_mode: "FULLTEXT"
                 },
                 {
                     label: "Längengrad",          uri: "de/deepamehta/core/property/longitude",
@@ -51,6 +50,38 @@
                 {
                     label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude",
                     editable: false
+                }
+            ]
+        },
+        {
+            label: "Access Point",
+            uri: "net/freifunk/topictype/access_point",
+            icon_src: "/net.freifunk.dm3-freifunk-geomap/images/wlan.png",
+            js_renderer_class: "PlainDocument",
+            fields: [
+                {
+                    label: "PLZ",                 uri: "de/deepamehta/core/property/postal_code", indexing_mode: "KEY"
+                },
+                {
+                    label: "Stadt",               uri: "de/deepamehta/core/property/city",    indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "Straße",              uri: "de/deepamehta/core/property/street",  indexing_mode: "FULLTEXT"
+                },
+                {
+                    label: "IP Adresse",          uri: "net/freifunk/property/ip_address"
+                },
+                {
+                    label: "Höhe über Grund (in Meter)", uri: "net/freifunk/property/elevation"
+                },
+                {
+                    label: "Funkkanal",           uri: "net/freifunk/property/channel"
+                },
+                {
+                    label: "WLAN Standard",       uri: "net/freifunk/property/wlan_standard"
+                },
+                {
+                    label: "ESSID",               uri: "net/freifunk/property/essid"
                 }
             ]
         }

@@ -1,5 +1,7 @@
 function freifunk_geomap_plugin() {
 
+    var FREIFUNK_WORKSPACE_NAME = "Freifunk"
+
     dm3c.css_stylesheet("/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/theme/default/style.css")
     dm3c.css_stylesheet("/net.freifunk.dm3-freifunk-geomap/style/openlayers-overrides.css")
 
@@ -10,7 +12,9 @@ function freifunk_geomap_plugin() {
 
     var LOG = false
     var self = this
+
     var access_control
+    var freifunk_workspace
 
     if (LOG) dm3c.log("DM3 Freifunk Geomap: instantiating topicmap renderer")
     this.geomap = new GeoMapRenderer()
@@ -27,6 +31,9 @@ function freifunk_geomap_plugin() {
 
     this.init = function() {
         access_control = dm3c.get_plugin("accesscontrol_plugin")
+        // FIXME: use acutal key instead "default". Backend must implement "multiple indexmodes".
+        freifunk_workspace = dm3c.restc.get_topic("de/deepamehta/core/topictype/Workspace",
+            /* "de/deepamehta/core/property/Name" */ "default", FREIFUNK_WORKSPACE_NAME)
     }
 
     this.get_canvas_renderer = function() {
@@ -53,17 +60,18 @@ function freifunk_geomap_plugin() {
                 var user = access_control.create_user(username, password)
                 access_control.set_owner(topic.id, user.id)
                 access_control.create_acl_entry(topic.id, "owner", {"write": true})
+                access_control.join_workspace(freifunk_workspace.id, user.id)
                 access_control.login(username)
             }
         }
 
         function adjust_marker() {
-            var street      = topic.properties["net/freifunk/property/street"]
-            var city        = topic.properties["net/freifunk/property/city"]
-            var postal_code = topic.properties["net/freifunk/property/postal_code"]
-            var old_street      = old_properties["net/freifunk/property/street"]
-            var old_city        = old_properties["net/freifunk/property/city"]
-            var old_postal_code = old_properties["net/freifunk/property/postal_code"]
+            var street      = topic.properties["de/deepamehta/core/property/street"]
+            var city        = topic.properties["de/deepamehta/core/property/city"]
+            var postal_code = topic.properties["de/deepamehta/core/property/postal_code"]
+            var old_street      = old_properties["de/deepamehta/core/property/street"]
+            var old_city        = old_properties["de/deepamehta/core/property/city"]
+            var old_postal_code = old_properties["de/deepamehta/core/property/postal_code"]
             var street_changed      = old_street != street
             var city_changed        = old_city != city
             var postal_code_changed = old_postal_code != postal_code

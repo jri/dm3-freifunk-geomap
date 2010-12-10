@@ -5,7 +5,7 @@
     <name>DM3 Freifunk Geomap</name>
     <groupId>net.freifunk</groupId>
     <artifactId>dm3-freifunk-geomap</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <parent>
@@ -19,6 +19,11 @@
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta3-core</artifactId>
             <version>${core-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.deepamehta</groupId>
+            <artifactId>deepamehta3-workspaces</artifactId>
+            <version>${workspaces-version}</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
