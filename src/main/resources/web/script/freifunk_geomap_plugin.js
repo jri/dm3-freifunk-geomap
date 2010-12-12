@@ -23,9 +23,9 @@ function freifunk_geomap_plugin() {
 
 
 
-    // *******************************
-    // *** Overriding Plugin Hooks ***
-    // *******************************
+    // ******************************************************
+    // *** Client Hooks (triggered by deepamehta3-client) ***
+    // ******************************************************
 
 
 
@@ -39,6 +39,16 @@ function freifunk_geomap_plugin() {
     this.get_canvas_renderer = function() {
         if (LOG) dm3c.log("DM3 Freifunk Geomap: topicmap renderer=" + this.geomap)
         return this.geomap
+    }
+
+    /**
+     * Once an access point is created we must
+     * 1) relate it to the user.
+     */
+    this.post_create_topic = function(topic) {
+        if (topic.type_uri == "net/freifunk/topictype/access_point") {
+            assign_access_point(topic, get_freikarte())
+        }
     }
 
     /**
@@ -61,7 +71,7 @@ function freifunk_geomap_plugin() {
                 access_control.set_owner(topic.id, user.id)
                 access_control.create_acl_entry(topic.id, "owner", {"write": true})
                 access_control.join_workspace(freifunk_workspace.id, user.id)
-                access_control.login(username)
+                access_control.login(user)
             }
         }
 
@@ -117,7 +127,31 @@ function freifunk_geomap_plugin() {
         }
     }
 
+
+
     // ----------------------------------------------------------------------------------------------- Private Functions
+
+    /**
+     * Return the Freikarte of the logged in user.
+     */
+    function get_freikarte() {
+        var user = access_control.get_user()
+        return get_freikarte_by_user(user)
+    }
+
+    /**
+     * Returns the Freikarte corresponding to a user.
+     */
+    function get_freikarte_by_user(user) {
+        return access_control.get_topic_by_owner(user.id, "net/freifunk/topictype/freikarte")
+    }
+
+    /**
+     * Assigns an access point to a Freikarte.
+     */
+    function assign_access_point(access_point, freikarte) {
+        dm3c.create_relation("ACCESS_POINT_OWNER", access_point.id, freikarte.id)
+    }
 }
 
 freifunk_geomap_plugin.init_renderer = function() {
