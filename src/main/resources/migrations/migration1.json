@@ -50,6 +50,13 @@
                 {
                     label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude",
                     editable: false
+                },
+                {
+                    label: "Access Points",       uri: "net/freifunk/property/access_points",
+                    data_type: "reference",
+                    ref_topic_type_uri: "net/freifunk/topictype/access_point",
+                    ref_relation_type_id: "ACCESS_POINT_OWNER;OUTGOING",
+                    editable: false
                 }
             ]
         },
@@ -89,6 +96,13 @@
                 },
                 {
                     label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude",
+                    editable: false
+                },
+                {
+                    label: "Freikarte",           uri: "net/freifunk/property/freikarte",
+                    data_type: "reference",
+                    ref_topic_type_uri: "net/freifunk/topictype/freikarte",
+                    ref_relation_type_id: "ACCESS_POINT_OWNER;INCOMING",
                     editable: false
                 }
             ]
