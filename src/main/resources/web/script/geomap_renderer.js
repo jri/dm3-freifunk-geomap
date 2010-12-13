@@ -10,8 +10,8 @@ function GeoMapRenderer() {
     this.superclass = TopicmapRenderer
     this.superclass()
 
-    var self = this
-    var markers = {}    // holds the OpenLayers.Marker objects, keyed by topic ID
+    var map
+    var marker_layers = {}
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
@@ -29,35 +29,24 @@ function GeoMapRenderer() {
 
     // ------------------------------------------------------------------------------------------------------ Public API
 
-    this.init = function() {
+    this.init = function(marker_layer_info) {
         OpenLayers.ImgPath = "/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/"
         //
-        var map = new OpenLayers.Map("canvas", {
+        map = new OpenLayers.Map("canvas", {
             controls: []
         })
-        var markers_layer = new OpenLayers.Layer.Markers("Access Points")
-
-        // Transforms lon/lat coordinates according to this map's projection.
-        var transform = function() {
-            // Note: this way the projection object is created only once and is not visible outside.
-            var projection = new OpenLayers.Projection("EPSG:4326")     // EPSG:4326 is *lon/lat* projection
-            return function(lon, lat) {
-                return new OpenLayers.LonLat(lon, lat).transform(
-                    projection, map.getProjectionObject()
-                )
-            }
-        }()
-        
         map.addLayers([
             new OpenLayers.Layer.Google("Google Maps"),
-            new OpenLayers.Layer.OSM("OpenSteetMap"),
-            markers_layer
+            new OpenLayers.Layer.OSM("OpenSteetMap")
         ])
         map.addControl(new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}))
         map.addControl(new OpenLayers.Control.ZoomPanel())
         map.addControl(new OpenLayers.Control.LayerSwitcher())
-        //
         map.setCenter(transform(11, 51), 6)
+        //
+        for (var i = 0, ml; ml = marker_layer_info[i]; i++) {
+            marker_layers[ml.name] = new MarkerLayer(ml.name, ml.icon_file, ml.type_uri)
+        }
 
         // === Public API ===
 
@@ -68,15 +57,37 @@ function GeoMapRenderer() {
             }
         }()
 
+        this.set_center = function(pos) {
+            map.setCenter(transform(pos.lon, pos.lat))
+        }
+    }
+
+    this.add_marker = function(layer_name, pos, topic) {
+        marker_layers[layer_name].add_marker(pos, topic)
+    }
+
+    this.remove_marker = function(layer_name, topic_id) {
+        marker_layers[layer_name].remove_marker(topic_id)
+    }
+
+    function MarkerLayer(layer_name, icon_file, type_uri) {
+        var self = this
+        var markers = {}    // holds the OpenLayers.Marker objects, keyed by topic ID
+        var markers_layer = new OpenLayers.Layer.Markers(layer_name)
+        map.addLayer(markers_layer)
+
+        // === Public API ===
+
         this.add_marker = function() {
             var size = new OpenLayers.Size(21, 25)
             var offset = new OpenLayers.Pixel(-size.w / 2, -size.h)
-            var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/marker.png',
-                size, offset)
+            var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/script/vendor/openlayers/img/' +
+                icon_file, size, offset)
             // - alternate marker -
             // var size = new OpenLayers.Size(28, 28)
             // var offset = new OpenLayers.Pixel(-13, -13)
-            // var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/images/wlan-small.png', size, offset)
+            // var icon = new OpenLayers.Icon('/net.freifunk.dm3-freifunk-geomap/images/wlan-small.png',
+            // size, offset)
             return function(pos, topic) {
                 // if the marker is already on the map, remove it
                 if (markers[topic.id]) {
@@ -87,6 +98,10 @@ function GeoMapRenderer() {
                 marker.events.register("click", topic, marker_clicked)
                 markers[topic.id] = marker
                 markers_layer.addMarker(marker)
+
+                function marker_clicked() {
+                    dm3c.render_topic(this.id)
+                }
             }
         }()
 
@@ -94,27 +109,28 @@ function GeoMapRenderer() {
             markers_layer.removeMarker(markers[topic_id])
         }
 
-        this.set_center = function(pos) {
-            map.setCenter(transform(pos.lon, pos.lat))
-        }
+        show_topics()
 
         // === Private Functions ===
 
-        function show_access_points() {
-            var access_points = dm3c.restc.get_topics("net/freifunk/topictype/freikarte")
-            for (var i = 0, ap; ap = access_points[i]; i++) {
-                var lon = ap.properties["de/deepamehta/core/property/longitude"]
-                var lat = ap.properties["de/deepamehta/core/property/latitude"]
-                self.add_marker({lon: lon, lat: lat}, ap)
+        function show_topics() {
+            var topics = dm3c.restc.get_topics(type_uri)
+            for (var i = 0, topic; topic = topics[i]; i++) {
+                var lon = topic.properties["de/deepamehta/core/property/longitude"]
+                var lat = topic.properties["de/deepamehta/core/property/latitude"]
+                self.add_marker({lon: lon, lat: lat}, topic)
             }
         }
-
-        function marker_clicked() {
-            dm3c.render_topic(this.id)
-        }
-
-        // ===
-
-        show_access_points()
     }
+
+    // Transforms lon/lat coordinates according to this map's projection.
+    var transform = function() {
+        // Note: this way the projection object is created only once and is not visible outside.
+        var projection = new OpenLayers.Projection("EPSG:4326")     // EPSG:4326 is *lon/lat* projection
+        return function(lon, lat) {
+            return new OpenLayers.LonLat(lon, lat).transform(
+                projection, map.getProjectionObject()
+            )
+        }
+    }()
 }

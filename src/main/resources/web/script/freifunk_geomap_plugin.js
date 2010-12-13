@@ -42,8 +42,7 @@ function freifunk_geomap_plugin() {
     }
 
     /**
-     * Once an access point is created we must
-     * 1) relate it to the user.
+     * Once an access point is created relate it to the user's freikarte.
      */
     this.post_create_topic = function(topic) {
         if (topic.type_uri == "net/freifunk/topictype/access_point") {
@@ -59,7 +58,9 @@ function freifunk_geomap_plugin() {
 
         if (topic.type_uri == "net/freifunk/topictype/freikarte") {
             create_user()
-            adjust_marker()
+            adjust_marker("Freikarten")
+        } else if (topic.type_uri == "net/freifunk/topictype/access_point") {
+            adjust_marker("Access Points")
         }
 
         function create_user() {
@@ -75,7 +76,7 @@ function freifunk_geomap_plugin() {
             }
         }
 
-        function adjust_marker() {
+        function adjust_marker(layer_name) {
             var street      = topic.properties["de/deepamehta/core/property/street"]
             var city        = topic.properties["de/deepamehta/core/property/city"]
             var postal_code = topic.properties["de/deepamehta/core/property/postal_code"]
@@ -108,7 +109,7 @@ function freifunk_geomap_plugin() {
                         "de/deepamehta/core/property/latitude":  location.lat()
                     })
                     // 2) update GUI
-                    self.geomap.add_marker(pos, topic)
+                    self.geomap.add_marker(layer_name, pos, topic)
                     self.geomap.set_center(pos)
                     dm3c.render_topic()
                 } else {
@@ -123,7 +124,9 @@ function freifunk_geomap_plugin() {
      */
     this.post_delete_topic = function(topic) {
         if (topic.type_uri == "net/freifunk/topictype/freikarte") {
-            self.geomap.remove_marker(topic.id)
+            self.geomap.remove_marker("Freikarten", topic.id)
+        } else if (topic.type_uri == "net/freifunk/topictype/access_point") {
+            self.geomap.remove_marker("Access Points", topic.id)
         }
     }
 
@@ -155,5 +158,8 @@ function freifunk_geomap_plugin() {
 }
 
 freifunk_geomap_plugin.init_renderer = function() {
-    dm3c.get_plugin("freifunk_geomap_plugin").geomap.init()
+    dm3c.get_plugin("freifunk_geomap_plugin").geomap.init([
+        {name: "Freikarten",    icon_file: "marker-blue.png", type_uri: "net/freifunk/topictype/freikarte"},
+        {name: "Access Points", icon_file: "marker.png",      type_uri: "net/freifunk/topictype/access_point"}
+    ])
 }

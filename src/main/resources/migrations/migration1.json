@@ -82,6 +82,14 @@
                 },
                 {
                     label: "ESSID",               uri: "net/freifunk/property/essid"
+                },
+                {
+                    label: "Längengrad",          uri: "de/deepamehta/core/property/longitude",
+                    editable: false
+                },
+                {
+                    label: "Breitengrad",         uri: "de/deepamehta/core/property/latitude",
+                    editable: false
                 }
             ]
         }

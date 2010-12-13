@@ -48,7 +48,9 @@ public class FreifunkGeomapPlugin extends Plugin {
 
     @Override
     public void providePropertiesHook(Topic topic) {
-        if (topic.typeUri.equals("net/freifunk/topictype/freikarte")) {
+        if (topic.typeUri.equals("net/freifunk/topictype/freikarte") ||
+            topic.typeUri.equals("net/freifunk/topictype/access_point")) {
+            //
             topic.setProperty("de/deepamehta/core/property/longitude",
                 dms.getTopicProperty(topic.id, "de/deepamehta/core/property/longitude"));
             topic.setProperty("de/deepamehta/core/property/latitude",
