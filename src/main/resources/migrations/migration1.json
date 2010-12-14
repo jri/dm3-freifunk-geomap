@@ -57,6 +57,13 @@
                     ref_topic_type_uri: "net/freifunk/topictype/access_point",
                     ref_relation_type_id: "ACCESS_POINT_OWNER;OUTGOING",
                     editable: false
+                },
+                {
+                    label: "Communities",         uri: "net/freifunk/property/communities",
+                    data_type: "reference",
+                    ref_topic_type_uri: "net/freifunk/topictype/community",
+                    ref_relation_type_id: "FREIFUNK_COMMUNITY_MEMBER;OUTGOING",
+                    editable: false
                 }
             ]
         },
@@ -103,6 +110,30 @@
                     data_type: "reference",
                     ref_topic_type_uri: "net/freifunk/topictype/freikarte",
                     ref_relation_type_id: "ACCESS_POINT_OWNER;INCOMING",
+                    editable: false
+                }
+            ]
+        },
+        {
+            label: "Freifunk Community",
+            uri: "net/freifunk/topictype/community",
+            js_renderer_class: "PlainDocument",
+            fields: [
+                {
+                    label: "Name der Community",  uri: "net/freifunk/property/community_name",
+                    indexing_mode: "FULLTEXT",
+                    js_renderer_class: "TitleRenderer"
+                },
+                {
+                    label: "Beschreibung",        uri: "net/freifunk/property/community_description",
+                    indexing_mode: "FULLTEXT",
+                    editor: "multi line", lines: 16
+                },
+                {
+                    label: "Mitglieder",          uri: "net/freifunk/property/community_members",
+                    data_type: "reference",
+                    ref_topic_type_uri: "net/freifunk/topictype/freikarte",
+                    ref_relation_type_id: "FREIFUNK_COMMUNITY_MEMBER;INCOMING",
                     editable: false
                 }
             ]

@@ -34,9 +34,9 @@ public class FreifunkGeomapPlugin extends Plugin {
 
 
 
-    // ************************
-    // *** Overriding Hooks ***
-    // ************************
+    // **************************************************
+    // *** Hooks (called from DeepaMehta 3 framework) ***
+    // **************************************************
 
 
 
@@ -64,16 +64,14 @@ public class FreifunkGeomapPlugin extends Plugin {
         // create workspace
         workspaces = (WorkspacesPlugin) dms.getPlugin("de.deepamehta.3-workspaces");
         Topic workspace = workspaces.createWorkspace(FREIFUNK_WORKSPACE_NAME);
-        // assign type to it
-        TopicType apTT = dms.getTopicType("net/freifunk/topictype/access_point", null);         // clientContext=null
-        workspaces.assignType(workspace.id, apTT.id);
+        // assign "Access Point" type
+        TopicType apType = dms.getTopicType("net/freifunk/topictype/access_point", null);     // clientContext=null
+        workspaces.assignType(workspace.id, apType.id);
+        // assign "Freifunk Community" type
+        TopicType fcType = dms.getTopicType("net/freifunk/topictype/community", null);        // clientContext=null
+        workspaces.assignType(workspace.id, fcType.id);
     }
 
-    /**
-     * Sets 2 permissions:
-     * - *Everyone* can create "Freikarten".
-     * - *Members* of the Freifunk workspace can create "Access Points".
-     */
     private void initACL() {
         // Note: the Freifunk plugin must be installed *after* the Access Control plugin.
         // FIXME: remove that constraint by providing public plugin API as OSGi service.
@@ -83,10 +81,14 @@ public class FreifunkGeomapPlugin extends Plugin {
         permissions.add(Permission.WRITE, false);
         permissions.add(Permission.CREATE, true);
         //
+        // *Everyone* can create a "Freikarte"
         TopicType fkType = dms.getTopicType("net/freifunk/topictype/freikarte", null);
         accessControl.createACLEntry(fkType.id, Role.EVERYONE, permissions);
-        //
+        // *Members* of the Freifunk workspace can create "Access Points".
         TopicType apType = dms.getTopicType("net/freifunk/topictype/access_point", null);
         accessControl.createACLEntry(apType.id, Role.MEMBER, permissions);
+        // *Members* of the Freifunk workspace can create "Freifunk Communities".
+        TopicType fcType = dms.getTopicType("net/freifunk/topictype/community", null);
+        accessControl.createACLEntry(fcType.id, Role.MEMBER, permissions);
     }
 }

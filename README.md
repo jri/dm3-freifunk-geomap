@@ -2,7 +2,7 @@
 DM3 Freifunk Geomap
 ===================
 
-This DeepaMehta 3 plugin realizes a Freifunk community application. Freifunk participants can register and provide information about themself and their access points. The access points are displayed on a geographical map (the user can choose between Google Maps and OpenStreetMap). Additionally, access points can be searched e.g. by user's real name, description, or city. The DM3 Freifunk Geomap plugin is designed to work in conjunction with the [DeepaMehta 3 Access Control](http://github.com/jri/deepamehta3-accesscontrol) plugin. The geo maps are realized by the means of [OpenLayers](http://openlayers.org/).
+This DeepaMehta 3 plugin realizes a Freifunk community application. Freifunk participants can register and provide information about themself and their access points. Both, participants and access points are displayed on a geographical map (you can choose between Google Maps and OpenStreetMap). Additionally, access points can be searched e.g. by user's real name, description, or city. The DM3 Freifunk Geomap plugin is designed to work in conjunction with the [DeepaMehta 3 Access Control](http://github.com/jri/deepamehta3-accesscontrol) plugin. The geo maps are realized by the means of [OpenLayers](http://openlayers.org/).
 
 Freifunk (German for "free radio") is an international project for open and free Wireless Networks with free frequencies for everyone. Based on open software and industry standards.  
 <http://www.freifunk.net/>
@@ -78,6 +78,14 @@ Stop the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal win
 Version History
 ---------------
 
+**v0.3** -- *upcoming*
+
+* Access points and user profiles ("Freikarten") are separated.
+    * Once a user has registered she can create any number of access points.
+    * The geo map displays access points and user profiles as different layers.
+* New feature: Freifunk Communities.
+    * A user can create communities and join communities created by others.
+
 **v0.2** -- Nov 25, 2010
 
 * Works in conjunction with [DeepaMehta 3 Access Control](http://github.com/jri/deepamehta3-accesscontrol) plugin.
@@ -95,4 +103,4 @@ Version History
 
 ------------
 Jörg Richter  
-Nov 25, 2010
+Dec 14, 2010

@@ -47,6 +47,8 @@ function freifunk_geomap_plugin() {
     this.post_create_topic = function(topic) {
         if (topic.type_uri == "net/freifunk/topictype/access_point") {
             assign_access_point(topic, get_freikarte())
+        } else if (topic.type_uri == "net/freifunk/topictype/community") {
+            join_community(topic, get_freikarte())
         }
     }
 
@@ -130,6 +132,45 @@ function freifunk_geomap_plugin() {
         }
     }
 
+    this.add_topic_commands = function(topic) {
+
+        var commands = []
+        //
+        if (topic.type_uri == "net/freifunk/topictype/community") {
+            // Note: if we have the permission to create a community (that is the user is logged in)
+            // we also have the permission to join and leave communities.
+            if (dm3c.has_create_permission("net/freifunk/topictype/community")) {
+                var freikarte = get_freikarte()
+                if (is_community_member(topic, freikarte)) {
+                    commands.push({
+                        label: "Leave Community",
+                        handler: do_leave_community,
+                        context: "detail-panel-show",
+                        ui_icon: "minus"
+                    })
+                } else {
+                    commands.push({
+                        label: "Join Community",
+                        handler: do_join_community,
+                        context: "detail-panel-show",
+                        ui_icon: "person"
+                    })
+                }
+            }
+        }
+        //
+        return commands
+
+        function do_join_community() {
+            join_community(topic, freikarte)
+            dm3c.render_topic()
+        }
+
+        function do_leave_community() {
+            leave_community(topic, freikarte)
+            dm3c.render_topic()
+        }
+    }
 
 
     // ----------------------------------------------------------------------------------------------- Private Functions
@@ -143,7 +184,7 @@ function freifunk_geomap_plugin() {
     }
 
     /**
-     * Returns the Freikarte corresponding to a user.
+     * Returns the Freikarte that corresponds to a DeepaMehta user.
      */
     function get_freikarte_by_user(user) {
         return access_control.get_topic_by_owner(user.id, "net/freifunk/topictype/freikarte")
@@ -154,6 +195,22 @@ function freifunk_geomap_plugin() {
      */
     function assign_access_point(access_point, freikarte) {
         dm3c.create_relation("ACCESS_POINT_OWNER", access_point.id, freikarte.id)
+    }
+
+    /**
+     * Assigns a Freifunk Community to a Freikarte.
+     */
+    function join_community(community, freikarte) {
+        dm3c.create_relation("FREIFUNK_COMMUNITY_MEMBER", community.id, freikarte.id)
+    }
+
+    function leave_community(community, freikarte) {
+        var relation = is_community_member(community, freikarte)
+        dm3c.delete_relation(relation.id)
+    }
+
+    function is_community_member(community, freikarte) {
+        return dm3c.restc.get_relation(community.id, freikarte.id, "FREIFUNK_COMMUNITY_MEMBER", true)
     }
 }
 
