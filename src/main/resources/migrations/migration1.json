@@ -3,6 +3,7 @@
         {
             label: "Freikarte",
             uri: "net/freifunk/topictype/freikarte",
+            icon_src: "/net.freifunk.dm3-freifunk-geomap/images/vcard.png",
             js_renderer_class: "PlainDocument",
             fields: [
                 {
@@ -117,6 +118,7 @@
         {
             label: "Freifunk Community",
             uri: "net/freifunk/topictype/community",
+            icon_src: "/net.freifunk.dm3-freifunk-geomap/images/soz-people.gif",
             js_renderer_class: "PlainDocument",
             fields: [
                 {

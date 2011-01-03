@@ -20,7 +20,7 @@ Install the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal 
 
 2. Download and start the DM3 Freifunk Geomap plugin:
 
-        start http://www.deepamehta.de/maven2/net/freifunk/dm3-freifunk-geomap/0.2/dm3-freifunk-geomap-0.2.jar
+        start http://www.deepamehta.de/maven2/net/freifunk/dm3-freifunk-geomap/0.3/dm3-freifunk-geomap-0.3.jar
 
    When using the `lb` command you should now see the DM3 Freifunk Geomap plugin as *Active*.
 
@@ -59,7 +59,7 @@ Stop the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal win
 
         ID|State      |Level|Name
         ..|..         |..   |..
-        40|Active     |    1|DM3 Freifunk Geomap (0.2.0)
+        40|Active     |    1|DM3 Freifunk Geomap (0.3.0)
 
 2. Stop the DM3 Freifunk Geomap plugin by using the `stop` command:
 
@@ -67,7 +67,7 @@ Stop the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal win
 
    When using the `lb` command again you see the DM3 Freifunk Geomap plugin is now in *Resolved* state (means not active):
 
-        39|Resolved   |    1|DM3 Freifunk Geomap (0.2.0)
+        39|Resolved   |    1|DM3 Freifunk Geomap (0.3.0)
 
 3. You're done. Open the DeepaMehta browser window (resp. press reload):  
    <http://localhost:8080/de.deepamehta.3-client/index.html>
@@ -78,7 +78,7 @@ Stop the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal win
 Version History
 ---------------
 
-**v0.3** -- *upcoming*
+**v0.3** -- Jan 3, 2011
 
 * Access points and user profiles ("Freikarten") are separated.
     * Once a user has registered she can create any number of access points.
@@ -103,4 +103,4 @@ Version History
 
 ------------
 Jörg Richter  
-Dec 14, 2010
+Jan 3, 2011
