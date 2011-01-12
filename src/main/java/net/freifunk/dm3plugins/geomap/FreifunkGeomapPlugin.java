@@ -1,11 +1,11 @@
 package net.freifunk.dm3plugins.geomap;
 
-import de.deepamehta.plugins.workspaces.WorkspacesPlugin;
+import de.deepamehta.plugins.workspaces.service.WorkspacesService;
 
-import de.deepamehta.plugins.accesscontrol.AccessControlPlugin;
 import de.deepamehta.plugins.accesscontrol.AccessControlPlugin.Permission;
 import de.deepamehta.plugins.accesscontrol.AccessControlPlugin.Role;
 import de.deepamehta.plugins.accesscontrol.model.Permissions;
+import de.deepamehta.plugins.accesscontrol.service.AccessControlService;
 
 import de.deepamehta.core.model.DataField;
 import de.deepamehta.core.model.Topic;
@@ -24,9 +24,6 @@ public class FreifunkGeomapPlugin extends Plugin {
     private static final String FREIFUNK_WORKSPACE_NAME = "Freifunk";
 
     // ---------------------------------------------------------------------------------------------- Instance Variables
-
-    private AccessControlPlugin accessControl;
-    private WorkspacesPlugin workspaces;
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -62,20 +59,22 @@ public class FreifunkGeomapPlugin extends Plugin {
 
     private void createFreifunkWorkspace() {
         // create workspace
-        workspaces = (WorkspacesPlugin) dms.getPlugin("de.deepamehta.3-workspaces");
-        Topic workspace = workspaces.createWorkspace(FREIFUNK_WORKSPACE_NAME);
+        WorkspacesService wsService = (WorkspacesService)
+            getService("de.deepamehta.plugins.workspaces.service.WorkspacesService");
+        Topic workspace = wsService.createWorkspace(FREIFUNK_WORKSPACE_NAME);
         // assign "Access Point" type
         TopicType apType = dms.getTopicType("net/freifunk/topictype/access_point", null);     // clientContext=null
-        workspaces.assignType(workspace.id, apType.id);
+        wsService.assignType(workspace.id, apType.id);
         // assign "Freifunk Community" type
         TopicType fcType = dms.getTopicType("net/freifunk/topictype/community", null);        // clientContext=null
-        workspaces.assignType(workspace.id, fcType.id);
+        wsService.assignType(workspace.id, fcType.id);
     }
 
     private void initACL() {
         // Note: the Freifunk plugin must be installed *after* the Access Control plugin.
         // FIXME: remove that constraint by providing public plugin API as OSGi service.
-        accessControl = (AccessControlPlugin) dms.getPlugin("de.deepamehta.3-accesscontrol");
+        AccessControlService acService = (AccessControlService)
+            getService("de.deepamehta.plugins.accesscontrol.service.AccessControlService");
         //
         Permissions permissions = new Permissions();
         permissions.add(Permission.WRITE, false);
@@ -83,12 +82,12 @@ public class FreifunkGeomapPlugin extends Plugin {
         //
         // *Everyone* can create a "Freikarte"
         TopicType fkType = dms.getTopicType("net/freifunk/topictype/freikarte", null);
-        accessControl.createACLEntry(fkType.id, Role.EVERYONE, permissions);
-        // *Members* of the Freifunk workspace can create "Access Points".
+        acService.createACLEntry(fkType.id, Role.EVERYONE, permissions);
+        // *Members* of the Freifunk workspace can create an "Access Point".
         TopicType apType = dms.getTopicType("net/freifunk/topictype/access_point", null);
-        accessControl.createACLEntry(apType.id, Role.MEMBER, permissions);
-        // *Members* of the Freifunk workspace can create "Freifunk Communities".
+        acService.createACLEntry(apType.id, Role.MEMBER, permissions);
+        // *Members* of the Freifunk workspace can create a "Freifunk Community".
         TopicType fcType = dms.getTopicType("net/freifunk/topictype/community", null);
-        accessControl.createACLEntry(fcType.id, Role.MEMBER, permissions);
+        acService.createACLEntry(fcType.id, Role.MEMBER, permissions);
     }
 }
