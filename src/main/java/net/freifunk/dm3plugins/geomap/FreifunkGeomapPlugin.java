@@ -2,9 +2,9 @@ package net.freifunk.dm3plugins.geomap;
 
 import de.deepamehta.plugins.workspaces.service.WorkspacesService;
 
-import de.deepamehta.plugins.accesscontrol.AccessControlPlugin.Permission;
-import de.deepamehta.plugins.accesscontrol.AccessControlPlugin.Role;
+import de.deepamehta.plugins.accesscontrol.model.Permission;
 import de.deepamehta.plugins.accesscontrol.model.Permissions;
+import de.deepamehta.plugins.accesscontrol.model.Role;
 import de.deepamehta.plugins.accesscontrol.service.AccessControlService;
 
 import de.deepamehta.core.model.Topic;
@@ -35,9 +35,9 @@ public class FreifunkGeomapPlugin extends Plugin {
 
 
 
-    // **************************************************
-    // *** Hooks (called from DeepaMehta 3 framework) ***
-    // **************************************************
+    // *********************************************
+    // *** Hooks (called from DeepaMehta 3 Core) ***
+    // *********************************************
 
 
 
