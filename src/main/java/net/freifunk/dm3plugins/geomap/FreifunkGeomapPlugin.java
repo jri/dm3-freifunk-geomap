@@ -62,10 +62,12 @@ public class FreifunkGeomapPlugin extends Plugin {
         performWorkspaceInitialization = true;
         performACLInitialization = true;
         if (wsService != null) {
-            logger.info("########## Clean install detected AND WorkspacesService already available => create Freifunk workspace");
+            logger.info("########## Clean install detected AND WorkspacesService already available " +
+                "=> create Freifunk workspace");
             createFreifunkWorkspace();
         } else {
-            logger.info("########## Clean install detected, WorkspacesService NOT yet available => create Freifunk workspace later on");
+            logger.info("########## Clean install detected, WorkspacesService NOT yet available " +
+                "=> create Freifunk workspace later on");
         }
         if (acService != null) {
             initACL();
@@ -80,10 +82,12 @@ public class FreifunkGeomapPlugin extends Plugin {
         if (service instanceof WorkspacesService) {
             wsService = (WorkspacesService) service;
             if (performWorkspaceInitialization) {
-                logger.info("########## WorkspacesService arrived AND clean install detected => create Freifunk workspace");
+                logger.info("########## WorkspacesService arrived AND clean install detected => " +
+                    "create Freifunk workspace");
                 createFreifunkWorkspace();
             } else {
-                logger.info("########## WorkspacesService arrived, clean install NOT yet detected => possibly create Freifunk workspace later on");
+                logger.info("########## WorkspacesService arrived, clean install NOT yet detected => " +
+                    "possibly create Freifunk workspace later on");
             }
         } else if (service instanceof AccessControlService) {
             acService = (AccessControlService) service;

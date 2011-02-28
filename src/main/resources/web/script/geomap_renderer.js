@@ -36,8 +36,8 @@ function GeoMapRenderer() {
             controls: []
         })
         map.addLayers([
-            new OpenLayers.Layer.Google("Google Maps"),
-            new OpenLayers.Layer.OSM("OpenSteetMap")
+            new OpenLayers.Layer.OSM("OpenSteetMap"),
+            new OpenLayers.Layer.Google("Google Maps")
         ])
         map.addControl(new OpenLayers.Control.Navigation({'zoomWheelEnabled': false}))
         map.addControl(new OpenLayers.Control.ZoomPanel())
