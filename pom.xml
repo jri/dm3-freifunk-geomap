@@ -11,7 +11,7 @@
     <parent>
         <groupId>de.deepamehta</groupId>
         <artifactId>deepamehta3-plugin-parent</artifactId>
-        <version>0.4.5-SNAPSHOT</version>
+        <version>0.4.5</version>
         <relativePath>../deepamehta3-plugin-parent/pom.xml</relativePath>
     </parent>
 
@@ -19,12 +19,12 @@
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta3-workspaces</artifactId>
-            <version>0.4.4-SNAPSHOT</version>
+            <version>0.4.4</version>
         </dependency>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta3-accesscontrol</artifactId>
-            <version>0.4.2-SNAPSHOT</version>
+            <version>0.4.2</version>
         </dependency>
     </dependencies>
 

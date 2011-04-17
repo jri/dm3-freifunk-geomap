@@ -85,6 +85,7 @@ Version History
     * The geo map displays access points and user profiles as different layers.
 * New feature: Freifunk Communities.
     * A user can create communities and join communities created by others.
+* Compatible with DeepaMehta 3 v0.4.4
 
 **v0.2** -- Nov 25, 2010
 
