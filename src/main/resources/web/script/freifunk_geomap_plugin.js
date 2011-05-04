@@ -23,9 +23,9 @@ function freifunk_geomap_plugin() {
 
 
 
-    // ******************************************************
-    // *** Client Hooks (triggered by deepamehta3-client) ***
-    // ******************************************************
+    // ************************************************************
+    // *** Webclient Hooks (triggered by deepamehta3-webclient) ***
+    // ************************************************************
 
 
 
@@ -206,7 +206,7 @@ function freifunk_geomap_plugin() {
 
     function leave_community(community, freikarte) {
         var relation = is_community_member(community, freikarte)
-        dm3c.delete_relation(relation.id)
+        dm3c.delete_association(relation.id)
     }
 
     function is_community_member(community, freikarte) {
