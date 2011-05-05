@@ -5,7 +5,7 @@
     <name>DM3 Freifunk Geomap</name>
     <groupId>net.freifunk</groupId>
     <artifactId>dm3-freifunk-geomap</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>bundle</packaging>
 
     <parent>
