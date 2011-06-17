@@ -2,7 +2,7 @@
 DM3 Freifunk Geomap
 ===================
 
-This DeepaMehta 3 plugin realizes a Freifunk community application. Freifunk participants can register and provide information about themself and their access points. Both, participants and access points are displayed on a geographical map (you can choose between Google Maps and OpenStreetMap). Additionally, access points can be searched e.g. by user's real name, description, or city. The DM3 Freifunk Geomap plugin is designed to work in conjunction with the [DeepaMehta 3 Access Control](http://github.com/jri/deepamehta3-accesscontrol) plugin. The geo maps are realized by the means of [OpenLayers](http://openlayers.org/).
+This DeepaMehta 3 plugin realizes a Freifunk community application. Freifunk participants can register and provide information about themself and their access points. Both, participants and access points are displayed on a geographical map (you can choose between Google Maps and OpenStreetMap). Additionally, access points can be searched e.g. by user's real name, description, or city. The geo maps are realized by the means of [OpenLayers](http://openlayers.org/).
 
 Freifunk (German for "free radio") is an international project for open and free Wireless Networks with free frequencies for everyone. Based on open software and industry standards.  
 <http://www.freifunk.net/>
@@ -14,14 +14,13 @@ DeepaMehta 3 is a platform for collaboration and knowledge management.
 Installing
 ----------
 
-Install the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal window that opens while starting DeepaMehta):
+1. Install and start [DeepaMehta 3](http://github.com/jri/deepamehta3).
 
-1. Activate the [DeepaMehta 3 Access Control](http://github.com/jri/deepamehta3-accesscontrol) plugin.
+2. In the Apache Felix shell (the terminal window that opens while starting DeepaMehta):
 
-2. Download and start the DM3 Freifunk Geomap plugin:
+        start http://www.deepamehta.de/maven2/net/freifunk/dm3-freifunk-geomap/0.4/dm3-freifunk-geomap-0.4.jar
 
-        start http://www.deepamehta.de:8081/nexus/content/groups/public/net/freifunk/dm3-freifunk-geomap/0.4/dm3-freifunk-geomap-0.4.jar
-
+   This downloads and starts the DM3 Freifunk Geomap plugin.  
    When using the `lb` command you should now see the DM3 Freifunk Geomap plugin as *Active*.
 
 3. You're done. Open the DeepaMehta browser window (resp. press reload):  
@@ -55,15 +54,15 @@ Stop the DM3 Freifunk Geomap plugin via the Apache Felix shell (the terminal win
 
         lb
 
-   You will find the DM3 Freifunk Geomap plugin and its bundle ID (it is supposed to be 40 or something like that) in the displayed list of bundles:
+   You will find the DM3 Freifunk Geomap plugin and its bundle ID (it is supposed to be 39 or something like that) in the displayed list of bundles:
 
         ID|State      |Level|Name
         ..|..         |..   |..
-        40|Active     |    1|DM3 Freifunk Geomap (0.4.0)
+        39|Active     |    1|DM3 Freifunk Geomap (0.4.0)
 
 2. Stop the DM3 Freifunk Geomap plugin by using the `stop` command:
 
-        stop 40
+        stop 39
 
    When using the `lb` command again you see the DM3 Freifunk Geomap plugin is now in *Resolved* state (means not active):
 
