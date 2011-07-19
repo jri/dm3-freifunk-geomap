@@ -5,7 +5,7 @@
     <name>DM3 Freifunk Geomap</name>
     <groupId>net.freifunk</groupId>
     <artifactId>dm3-freifunk-geomap</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>bundle</packaging>
 
     <parent>
@@ -42,6 +42,28 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <!-- Enabling the use of SCP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
     </build>
+
+    <repositories>
+        <repository>
+            <id>deepamehta-public-repository</id>
+            <url>http://www.deepamehta.de/maven2</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>deepamehta-public-repository</id>
+            <url>scpexe://www.deepamehta.de/var/lib/tomcat-6/webapps/ROOT/maven2</url>
+        </repository>
+    </distributionManagement>
 
 </project>
